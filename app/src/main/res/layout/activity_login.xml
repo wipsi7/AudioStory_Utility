@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".activities.LoginActivity"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
+        android:text="@string/title_activity_login"
+        android:textSize="32sp"
+        android:id="@+id/title_login"
+
+
+        android:layout_gravity="center"
+        android:gravity="bottom"
+        android:layout_above="@+id/username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:ems="10"
+        android:id="@+id/username"
+        android:hint="@string/username_activity_login"
+        android:background="@drawable/rounded"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        android:layout_gravity="center"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_centerInParent="true"
+        android:gravity="center" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/password"
+        android:background="@drawable/rounded"
+        android:hint="@string/password_activity_login"
+        android:maxLines="1"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="false"
+        android:layout_below="@+id/username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center" />
+
+
+
+    <Button
+        android:layout_width="110dp"
+        android:layout_height="35dp"
+        android:text="@string/enter_activity_login"
+        android:id="@+id/enter_button"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/password"
+        android:layout_centerInParent="true"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remember_me_activity_login"
+        android:id="@+id/remember_checkBox"
+        android:checked="false"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/enter_button"
+        android:layout_marginTop="30dp" />
+
+</RelativeLayout>
