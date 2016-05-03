@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".NfcActivity">
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:id="@+id/text_input"
+        app:counterEnabled="true"
+        app:counterMaxLength="25"
+        app:counterTextAppearance="@color/counterColor"
+        app:hintEnabled="false"
+        android:layout_above="@+id/button">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:singleLine="true"
+        android:maxLength="25"
+        android:ems="25"
+        app:counterEnabled="true"
+        app:counterMaxLength="25"
+        app:counterTextAppearance="@color/counterColor"
+        android:id="@+id/artifact_name"
+        android:hint="@string/artifact_name_activity_nfc" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/write_to_tag_activity_nfc"
+        android:id="@+id/button"
+        android:layout_gravity="center_horizontal"
+        android:onClick="writeToTag"
+        android:layout_centerInParent="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView"
+        android:layout_above="@+id/text_input"
+        android:layout_centerHorizontal="true"
+        android:text="@string/insert_artifact_name_activity_nfc"
+        android:textSize="32sp"
+        android:layout_marginBottom="40dp" />
+</RelativeLayout>

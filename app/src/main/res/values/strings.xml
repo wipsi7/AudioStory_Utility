@@ -1,10 +1,16 @@
 <resources>
     <string name="app_name">AudioStory Utility</string>
-    <string name="write_to_tag">Write to tag</string>
+
+
     <string name="title_activity_login">Log in</string>
     <string name="username_activity_login">Username</string>
     <string name="password_activity_login">Password</string>
+    <string name="collection_id_activity_login">Collection ID</string>
     <string name="enter_activity_login">Enter</string>
     <string name="remember_me_activity_login">Remember Me</string>
     <string name="emptyfiled_activity_login">Field is empty</string>
+
+    <string name="write_to_tag_activity_nfc">Write to tag</string>
+    <string name="artifact_name_activity_nfc">Artifact name</string>
+    <string name="insert_artifact_name_activity_nfc">Insert artifact name</string>
 </resources>
