@@ -23,14 +23,16 @@ import fi.metropolia.audiostoryutility.tasks.LoginTask;
 public class LoginActivity extends AppCompatActivity{
 
 
-    public static final String PREFS_NAME = "remember_prefs";
+
     public static final String PREF_USERNAME = "username";
     public static final String PREF_PASSWORD = "password";
     public static final String PREF_ID = "collection_id";
+
+    private static final String PREFS_NAME = "remember_prefs";
     private static final String CHECKED = "checked";
 
     private static final String DEBUG_TAG = "LoginActivity";
-    private static final int API_KEY_LENGHT = 128;
+    private static final int API_KEY_LENGTH = 128;
 
     public static final String API_KEY = "Key";
 
@@ -85,12 +87,15 @@ public class LoginActivity extends AppCompatActivity{
                             @Override
                             public void onProcessFinish(ServerConnection result) {
                                 int length = result.getApiKey().length();
-                                if(length == API_KEY_LENGHT){
+                                if(length == API_KEY_LENGTH){
                                     mainActivityIntent.putExtra(API_KEY, result.getApiKey());
                                     mainActivityIntent.putExtra(PREF_USERNAME, user);
                                     mainActivityIntent.putExtra(PREF_PASSWORD, pass);
                                     mainActivityIntent.putExtra(PREF_ID, id);
                                     startActivity(mainActivityIntent);
+                                }
+                                else{
+                                    Toast.makeText(getBaseContext(), "Wrong username or password", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -105,7 +110,7 @@ public class LoginActivity extends AppCompatActivity{
         });
     }
 
-    public void savePreferences(String user, String pass, String id,  boolean remember_checkbox){
+    private void savePreferences(String user, String pass, String id,  boolean remember_checkbox){
         getSharedPreferences(PREFS_NAME,MODE_PRIVATE)
                 .edit()
                 .putString(PREF_USERNAME, user)
@@ -133,19 +138,20 @@ public class LoginActivity extends AppCompatActivity{
 
 
     private boolean isFormValid(){
-        boolean isUserEmpty = this.et_user.getText().toString().isEmpty();
-        boolean isPassEmpty = this.et_pass.getText().toString().isEmpty();
+        boolean isUserEmpty = et_user.getText().toString().isEmpty();
+        boolean isPassEmpty = et_pass.getText().toString().isEmpty();
+        boolean isCollectionIdEmpty = et_id.getText().toString().isEmpty();
         if(isUserEmpty){
-            this.et_user.setError(getString(R.string.emptyfiled_activity_login));
+            et_user.setError(getString(R.string.emptyfiled_activity_login));
         }
         if(isPassEmpty){
-            this.et_pass.setError(getString(R.string.emptyfiled_activity_login));
+            et_pass.setError(getString(R.string.emptyfiled_activity_login));
+        }
+        if(isCollectionIdEmpty){
+            et_id.setError(getString(R.string.emptyfiled_activity_login));
         }
 
-        if(isPassEmpty || isUserEmpty)
-            return false;
-        else
-            return true;
+        return !(isPassEmpty || isUserEmpty || isCollectionIdEmpty);
     }
 
     private boolean isNetworkAvailable() {
