@@ -26,6 +26,7 @@ public class LoginActivity extends AppCompatActivity{
     private static final String PREFS_NAME = "remember_prefs";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_PASSWORD = "password";
+    private static final String PREF_ID = "collection_id";
     private static final String CHECKED = "checked";
 
     private static final String DEBUG_TAG = "LoginActivity";
@@ -34,7 +35,7 @@ public class LoginActivity extends AppCompatActivity{
     public static final String API_KEY = "Key";
 
 
-    private EditText et_user, et_pass;
+    private EditText et_user, et_pass, et_id;
     private CheckBox cb_remember_me;
     private Button btn_login;
     private Intent intent;
@@ -55,6 +56,7 @@ public class LoginActivity extends AppCompatActivity{
 
         et_user = (EditText)findViewById(R.id.username);
         et_pass = (EditText)findViewById(R.id.password);
+        et_id = (EditText)findViewById(R.id.collection_id);
         btn_login = (Button)findViewById(R.id.enter_button);
         cb_remember_me = (CheckBox) findViewById(R.id.remember_checkBox);
 
@@ -65,12 +67,13 @@ public class LoginActivity extends AppCompatActivity{
             public void onClick(View view) {
                 String user = et_user.getText().toString();
                 String pass = et_pass.getText().toString();
+                String id = et_id.getText().toString();
                 if (isFormValid()) {
 
                     if(cb_remember_me.isChecked()){
-                        savePreferences(user, pass, true);
+                        savePreferences(user, pass, id, true);
                     }else {
-                        savePreferences(null, null, false);
+                        savePreferences(null, null, null, false);
                     }
 
                     if(isNetworkAvailable()) {
@@ -97,11 +100,12 @@ public class LoginActivity extends AppCompatActivity{
         });
     }
 
-    public void savePreferences(String user, String pass,  boolean remember_checkbox){
+    public void savePreferences(String user, String pass, String id,  boolean remember_checkbox){
         getSharedPreferences(PREFS_NAME,MODE_PRIVATE)
                 .edit()
                 .putString(PREF_USERNAME, user)
                 .putString(PREF_PASSWORD, pass)
+                .putString(PREF_ID,id)
                 .putBoolean(CHECKED, remember_checkbox)
                 .commit();
     }
@@ -111,11 +115,13 @@ public class LoginActivity extends AppCompatActivity{
         SharedPreferences pref = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
         String username = pref.getString(PREF_USERNAME, null);
         String password = pref.getString(PREF_PASSWORD, null);
+        String id = pref.getString(PREF_ID, null);
         boolean checked = pref.getBoolean(CHECKED, false);
 
         if(checked){
             et_user.setText(username);
             et_pass.setText(password);
+            et_id.setText(id);
             cb_remember_me.setChecked(true);
         }
     }
