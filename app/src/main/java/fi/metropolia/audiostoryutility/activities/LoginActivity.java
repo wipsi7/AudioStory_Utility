@@ -14,7 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import fi.metropolia.audiostoryutility.MainActivity;
+import fi.metropolia.audiostoryutility.NfcActivity;
 import fi.metropolia.audiostoryutility.R;
 import fi.metropolia.audiostoryutility.interfaces.AsyncResponse;
 import fi.metropolia.audiostoryutility.server.ServerConnection;
@@ -23,10 +23,10 @@ import fi.metropolia.audiostoryutility.tasks.LoginTask;
 public class LoginActivity extends AppCompatActivity{
 
 
-    private static final String PREFS_NAME = "remember_prefs";
-    private static final String PREF_USERNAME = "username";
-    private static final String PREF_PASSWORD = "password";
-    private static final String PREF_ID = "collection_id";
+    public static final String PREFS_NAME = "remember_prefs";
+    public static final String PREF_USERNAME = "username";
+    public static final String PREF_PASSWORD = "password";
+    public static final String PREF_ID = "collection_id";
     private static final String CHECKED = "checked";
 
     private static final String DEBUG_TAG = "LoginActivity";
@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity{
     private EditText et_user, et_pass, et_id;
     private CheckBox cb_remember_me;
     private Button btn_login;
-    private Intent intent;
+    private Intent mainActivityIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity{
 
     private void init() {
 
-        intent = new Intent(this, MainActivity.class);
+        mainActivityIntent = new Intent(this, NfcActivity.class);
 
         et_user = (EditText)findViewById(R.id.username);
         et_pass = (EditText)findViewById(R.id.password);
@@ -65,9 +65,10 @@ public class LoginActivity extends AppCompatActivity{
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String user = et_user.getText().toString();
-                String pass = et_pass.getText().toString();
-                String id = et_id.getText().toString();
+                final String user = et_user.getText().toString();
+                final String pass = et_pass.getText().toString();
+                final String id = et_id.getText().toString();
+
                 if (isFormValid()) {
 
                     if(cb_remember_me.isChecked()){
@@ -80,12 +81,16 @@ public class LoginActivity extends AppCompatActivity{
                         Log.d(DEBUG_TAG, "Connected to internet");
                         LoginTask loginTask = new LoginTask();
                         loginTask.setOnLoginResult(new AsyncResponse() {
+
                             @Override
                             public void onProcessFinish(ServerConnection result) {
-                                int lenght = result.getApiKey().length();
-                                if(lenght == API_KEY_LENGHT){
-                                    intent.putExtra(API_KEY, result.getApiKey());
-                                    startActivity(intent);
+                                int length = result.getApiKey().length();
+                                if(length == API_KEY_LENGHT){
+                                    mainActivityIntent.putExtra(API_KEY, result.getApiKey());
+                                    mainActivityIntent.putExtra(PREF_USERNAME, user);
+                                    mainActivityIntent.putExtra(PREF_PASSWORD, pass);
+                                    mainActivityIntent.putExtra(PREF_ID, id);
+                                    startActivity(mainActivityIntent);
                                 }
                             }
                         });

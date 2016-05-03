@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import fi.metropolia.audiostoryutility.activities.LoginActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class NfcActivity extends AppCompatActivity {
 
     private NfcAdapter nfcAdapter;
     private Locale locale;
@@ -33,15 +33,22 @@ public class MainActivity extends AppCompatActivity {
     private NdefRecord ndefRecord;
     private Ndef ndef;
     private boolean tagWriteEnabled = false;
+
+
+
     private String apiKey = null;
+    private String userName = null;
+    private String password = null;
+    private String collectionID = null;
 
 
-    private static String NFC_TAG = "nfcTag";
+    private static final String NFC_TAG = "nfcTag";
+    private static final String DEBUG_TAG = "NfcActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_nfc);
 
 
         init();
@@ -51,9 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
 
-        Intent loginIntent = getIntent();
-        apiKey = loginIntent.getStringExtra(LoginActivity.API_KEY);
-
+        getDataFromIntent();
 
 
         Intent intent = new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -105,6 +110,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /** Acquires data from LoginActivity (API key, username, password, collection id) */
+    private void getDataFromIntent(){
+
+        Intent loginIntent = getIntent();
+        apiKey = loginIntent.getStringExtra(LoginActivity.API_KEY);
+        userName = loginIntent.getStringExtra(LoginActivity.PREF_USERNAME);
+        password = loginIntent.getStringExtra(LoginActivity.PREF_PASSWORD);
+        collectionID = loginIntent.getStringExtra(LoginActivity.PREF_ID);
+
+        Log.d(DEBUG_TAG, "User: " + userName);
+        Log.d(DEBUG_TAG, "pass: " + password);
+        Log.d(DEBUG_TAG, "ID: " + collectionID);
+    }
+
     private void createNdefMessage() {
         ndefRecord = createTextRecord(apiKey, locale);
         ndefMessage = new NdefMessage(ndefRecord);
@@ -140,9 +159,9 @@ public class MainActivity extends AppCompatActivity {
         data[0] = (byte) status;
         System.arraycopy(langBytes, 0, data, 1, langBytes.length);
         System.arraycopy(textBytes, 0, data, 1 + langBytes.length, textBytes.length);
-        NdefRecord record = new NdefRecord(NdefRecord.TNF_WELL_KNOWN,
+
+        return new NdefRecord(NdefRecord.TNF_WELL_KNOWN,
                 NdefRecord.RTD_TEXT, new byte[0], data);
-        return record;
     }
 
     private boolean isNfcAvailable() {
