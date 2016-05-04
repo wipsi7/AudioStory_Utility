@@ -1,6 +1,7 @@
 package fi.metropolia.audiostoryutility;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.FormatException;
@@ -13,6 +14,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -35,6 +39,10 @@ public class NfcActivity extends AppCompatActivity {
     private boolean tagWriteEnabled = false;
 
 
+    private EditText et_artifact_name;
+    private Button btnWrite;
+
+
 
     private String apiKey = null;
     private String userName = null;
@@ -50,36 +58,17 @@ public class NfcActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc);
 
-
+        initViews();
         init();
         createNdefMessage();
 
+
     }
-
-    private void init() {
-
-        getDataFromIntent();
-
-
-        Intent intent = new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-
-        createNdefFilter();
-        createTechFilter();
-
-        intentFilterArray = new IntentFilter[]{nDef, tech};
-        techListArray = new String[][]{new String[] { Ndef.class.getName()}};
-
-        locale = getResources().getConfiguration().locale;
-    }
-
 
     @Override
     protected void onResume() {
         super.onResume();
         if(isNfcAvailable()){
-
             nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilterArray, techListArray);
         }else {
             finish();
@@ -109,6 +98,37 @@ public class NfcActivity extends AppCompatActivity {
         }
 
     }
+
+    private void initViews() {
+
+        et_artifact_name = (EditText)findViewById(R.id.artifact_name);
+        btnWrite = (Button)findViewById(R.id.write_button);
+
+    }
+
+    private void init() {
+
+        getDataFromIntent();
+
+        Intent intent = new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+
+        createNdefFilter();
+        createTechFilter();
+
+        intentFilterArray = new IntentFilter[]{nDef, tech};
+        techListArray = new String[][]{new String[] { Ndef.class.getName()}};
+
+        locale = getResources().getConfiguration().locale;
+
+
+    }
+
+
+
+
+
 
     /** Acquires data from LoginActivity (API key, username, password, collection id) */
     private void getDataFromIntent(){
@@ -206,7 +226,25 @@ public class NfcActivity extends AppCompatActivity {
     }
 
     public void writeToTag(View view){
-        tagWriteEnabled = true;
+        if(!et_artifact_name.getText().toString().isEmpty()) {
+            tagWriteEnabled = true;
+            hideKeyboard();
+        }
+        else {
+            et_artifact_name.requestFocus();
+            et_artifact_name.setError(getString(R.string.err_name_first_activity_nfc));
+        }
+
+
     }
+
+    private void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
 }
 

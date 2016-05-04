@@ -10,6 +10,7 @@
     <string name="remember_me_activity_login">Remember Me</string>
     <string name="emptyfiled_activity_login">Field is empty</string>
 
+    <string name="err_name_first_activity_nfc">Enter name first</string>
     <string name="write_to_tag_activity_nfc">Write to tag</string>
     <string name="artifact_name_activity_nfc">Artifact name</string>
     <string name="insert_artifact_name_activity_nfc">Insert artifact name</string>
