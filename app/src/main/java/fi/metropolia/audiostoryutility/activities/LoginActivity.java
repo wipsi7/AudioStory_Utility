@@ -14,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import fi.metropolia.audiostoryutility.NfcActivity;
 import fi.metropolia.audiostoryutility.R;
 import fi.metropolia.audiostoryutility.interfaces.AsyncResponse;
 import fi.metropolia.audiostoryutility.server.ServerConnection;

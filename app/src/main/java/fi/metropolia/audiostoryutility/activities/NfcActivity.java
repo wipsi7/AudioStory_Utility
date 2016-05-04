@@ -1,4 +1,4 @@
-package fi.metropolia.audiostoryutility;
+package fi.metropolia.audiostoryutility.activities;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-import fi.metropolia.audiostoryutility.activities.LoginActivity;
+import fi.metropolia.audiostoryutility.R;
 
 public class NfcActivity extends AppCompatActivity {
 
@@ -225,10 +225,14 @@ public class NfcActivity extends AppCompatActivity {
         }
     }
 
-    public void writeToTag(View view){
+    /** called on "write to tag" button click*/
+    public void onTagButtonClick(View view){
         if(!et_artifact_name.getText().toString().isEmpty()) {
-            tagWriteEnabled = true;
+/*            tagWriteEnabled = true;*/
             hideKeyboard();
+
+            Intent nfcWriteIntent = new Intent(this, NfcWriteActivity.class);
+            startActivity(nfcWriteIntent);
         }
         else {
             et_artifact_name.requestFocus();
