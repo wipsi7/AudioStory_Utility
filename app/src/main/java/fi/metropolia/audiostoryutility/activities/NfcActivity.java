@@ -66,6 +66,8 @@ public class NfcActivity extends AppCompatActivity {
         nfcController = new NfcController(this);
         Intent intent = new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+
     }
 
     /** Acquires data from LoginActivity (API key, username, password, collection id) */
@@ -82,7 +84,7 @@ public class NfcActivity extends AppCompatActivity {
     public void onTagButtonClick(View view){
         String artifactName = et_artifact_name.getText().toString().trim();
         if(!artifactName.isEmpty()) {
-            
+
             hideKeyboard();
 
             Intent nfcWriteIntent = new Intent(this, NfcWriteActivity.class);
