@@ -20,12 +20,10 @@ public class NfcController {
     private static final String NFC_TAG = "nfcTag";
 
     private Context context;
-    private IntentFilter nDef, tech;
     private IntentFilter[] intentFilterArray;
     private String[][] techListArray;
 
     private Locale locale;
-    private Ndef ndef;
     private NfcAdapter nfcAdapter;
 
     public NfcController(Context context){
@@ -52,8 +50,9 @@ public class NfcController {
         locale = context.getResources().getConfiguration().locale;
         nfcAdapter = NfcAdapter.getDefaultAdapter(context.getApplicationContext());
 
-        nDef = createNdefIntentFilter();
-        tech = createTechIntentFilter();
+        IntentFilter nDef = createNdefIntentFilter();
+        IntentFilter tech = createTechIntentFilter();
+
         intentFilterArray = new IntentFilter[]{nDef, tech};
 
         techListArray = new String[][]{new String[] { Ndef.class.getName()}};
@@ -98,13 +97,10 @@ public class NfcController {
                 NdefRecord.RTD_TEXT, new byte[0], data);
     }
 
-
     public void writeToTag(Tag tagFromIntent, NdefRecord[] ndefRecords) {
         NdefMessage ndefMessage = new NdefMessage(ndefRecords);
+        Ndef ndef = Ndef.get(tagFromIntent);
 
-        ndef = Ndef.get(tagFromIntent);
-/*        Toast.makeText(this, "NDef max size: "+ ndef.getMaxSize(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "Message max size: "+ ndefMessage.getByteArrayLength(), Toast.LENGTH_SHORT).show();*/
 
         if(ndefMessage.getByteArrayLength() <= ndef.getMaxSize()) {
             try {
