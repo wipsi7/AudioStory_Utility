@@ -7,10 +7,12 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import fi.metropolia.audiostoryutility.R;
 import fi.metropolia.audiostoryutility.nfc.NfcController;
+import fi.metropolia.audiostoryutility.security.Encrypter;
 
 public class NfcWriteActivity extends AppCompatActivity {
 
@@ -22,6 +24,8 @@ public class NfcWriteActivity extends AppCompatActivity {
 
 
     private String user, pass, collId, artifactName;
+
+    private Encrypter encrypter;
 
     private NdefRecord[] ndefRecords;
 
@@ -58,17 +62,22 @@ public class NfcWriteActivity extends AppCompatActivity {
         nfcController = new NfcController(this);
         Intent intent = new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        encrypter = new Encrypter();
 
         getDataFromIntent();
         ndefRecords = createNDefRecordArray();
     }
 
     private NdefRecord[] createNDefRecordArray() {
-        NdefRecord[] ndefRecordsTemp = new NdefRecord[4];
-        ndefRecordsTemp[0] = nfcController.createNdefTextRecord(user);
-        ndefRecordsTemp[1] = nfcController.createNdefTextRecord(pass);
-        ndefRecordsTemp[2] = nfcController.createNdefTextRecord(collId);
-        ndefRecordsTemp[3] = nfcController.createNdefTextRecord(artifactName);
+        NdefRecord[] ndefRecordsTemp = new NdefRecord[5];
+        ndefRecordsTemp[0] = NdefRecord.createApplicationRecord("fi.metropolia.audiostory");
+        ndefRecordsTemp[1] = nfcController.createNdefTextRecord(user);
+        ndefRecordsTemp[2] = nfcController.createNdefTextRecord(pass);
+        ndefRecordsTemp[3] = nfcController.createNdefTextRecord(collId);
+        ndefRecordsTemp[4] = nfcController.createNdefTextRecord(artifactName);
+
+        Log.d(DEBUG_TAG, "Decrypter user: " + encrypter.decrypt(user));
+        Log.d(DEBUG_TAG, "Decrypted pass: " + encrypter.decrypt(pass));
 
         return ndefRecordsTemp;
     }

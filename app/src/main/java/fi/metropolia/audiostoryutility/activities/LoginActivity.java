@@ -91,7 +91,11 @@ public class LoginActivity extends AppCompatActivity{
                                 if(length == API_KEY_LENGTH){
                                     Encrypter encrypter = new Encrypter();
 
+
                                     mainActivityIntent.putExtra(API_KEY, result.getApiKey());
+
+
+
                                     mainActivityIntent.putExtra(PREF_USERNAME, encrypter.encrypt(user));
                                     mainActivityIntent.putExtra(PREF_PASSWORD, encrypter.encrypt(pass));
                                     mainActivityIntent.putExtra(PREF_ID, id);

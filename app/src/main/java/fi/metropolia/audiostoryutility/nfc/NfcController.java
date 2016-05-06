@@ -122,11 +122,11 @@ public class NfcController {
             } catch (IOException e) {
                 Log.e(NFC_TAG, "Error: tag connection fail");
                 e.getMessage();
-                Toast.makeText(context.getApplicationContext(), "Write failed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context.getApplicationContext(), "Write failed, try again!", Toast.LENGTH_SHORT).show();
             } catch (FormatException e) {
                 Log.e(NFC_TAG, "Error: malformed NDEF message");
                 e.getMessage();
-                Toast.makeText(context.getApplicationContext(), "Write failed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context.getApplicationContext(), "Write failed, try again!", Toast.LENGTH_SHORT).show();
             }
         }else {
             Toast.makeText(context.getApplicationContext(), "Not enough space", Toast.LENGTH_SHORT).show();

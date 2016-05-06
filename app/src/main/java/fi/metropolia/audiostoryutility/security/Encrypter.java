@@ -1,37 +1,30 @@
 package fi.metropolia.audiostoryutility.security;
 
-import com.scottyab.aescrypt.AESCrypt;
-
-import java.security.GeneralSecurityException;
-
 public class Encrypter {
 
-    private String passEncrypt = "e54FS6Xzq";
+    private int userKey = 7;
 
+    
     public String encrypt(String message){
 
-        String encryptedMsg = null;
+        StringBuilder msg = new StringBuilder(message);
 
-        try {
-             encryptedMsg = AESCrypt.encrypt(passEncrypt, message);
-
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+        for(int i = 0; i < msg.length(); i++){
+            msg.setCharAt(i, (char)(msg.charAt(i) + userKey));
         }
 
-        return encryptedMsg;
+        return msg.toString();
     }
 
     public String decrypt(String encryptedMessage){
-        String decrypted = null;
+        
+        StringBuilder msg = new StringBuilder(encryptedMessage);
 
-        try {
-            decrypted = AESCrypt.decrypt(passEncrypt, encryptedMessage);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+        for(int i = 0; i < msg.length(); i++){
+            msg.setCharAt(i, (char)(msg.charAt(i) - userKey));
         }
 
-        return decrypted;
+        return msg.toString();
     }
 
 }

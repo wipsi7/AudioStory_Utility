@@ -28,9 +28,9 @@
         android:lines="1"
         android:singleLine="true"
         android:maxLength="25"
-        android:ems="25"
+        android:ems="24"
         app:counterEnabled="true"
-        app:counterMaxLength="25"
+        app:counterMaxLength="24"
         app:counterTextAppearance="@color/counterColor"
         android:id="@+id/artifact_name"
         android:hint="@string/artifact_name_activity_nfc" />
