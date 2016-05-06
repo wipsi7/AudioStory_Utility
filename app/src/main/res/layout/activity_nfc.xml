@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/relative_nfc_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".NfcActivity">
+    tools:context=".activities.NfcActivity">
 
 
     <android.support.design.widget.TextInputLayout
@@ -28,9 +28,9 @@
         android:lines="1"
         android:singleLine="true"
         android:maxLength="25"
-        android:ems="25"
+        android:ems="24"
         app:counterEnabled="true"
-        app:counterMaxLength="25"
+        app:counterMaxLength="24"
         app:counterTextAppearance="@color/counterColor"
         android:id="@+id/artifact_name"
         android:hint="@string/artifact_name_activity_nfc" />
@@ -42,7 +42,7 @@
         android:text="@string/write_to_tag_activity_nfc"
         android:id="@+id/write_button"
         android:layout_gravity="center_horizontal"
-        android:onClick="writeToTag"
+        android:onClick="onTagButtonClick"
         android:layout_centerInParent="true" />
 
     <TextView

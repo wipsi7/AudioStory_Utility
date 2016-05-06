@@ -14,9 +14,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import fi.metropolia.audiostoryutility.NfcActivity;
 import fi.metropolia.audiostoryutility.R;
 import fi.metropolia.audiostoryutility.interfaces.AsyncResponse;
+import fi.metropolia.audiostoryutility.security.Encrypter;
 import fi.metropolia.audiostoryutility.server.ServerConnection;
 import fi.metropolia.audiostoryutility.tasks.LoginTask;
 
@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity{
     private static final int API_KEY_LENGTH = 128;
 
     public static final String API_KEY = "Key";
+
 
 
     private EditText et_user, et_pass, et_id;
@@ -67,9 +68,9 @@ public class LoginActivity extends AppCompatActivity{
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String user = et_user.getText().toString();
-                final String pass = et_pass.getText().toString();
-                final String id = et_id.getText().toString();
+                final String user = et_user.getText().toString().trim();
+                final String pass = et_pass.getText().toString().trim();
+                final String id = et_id.getText().toString().trim();
 
                 if (isFormValid()) {
 
@@ -88,9 +89,15 @@ public class LoginActivity extends AppCompatActivity{
                             public void onProcessFinish(ServerConnection result) {
                                 int length = result.getApiKey().length();
                                 if(length == API_KEY_LENGTH){
+                                    Encrypter encrypter = new Encrypter();
+
+
                                     mainActivityIntent.putExtra(API_KEY, result.getApiKey());
-                                    mainActivityIntent.putExtra(PREF_USERNAME, user);
-                                    mainActivityIntent.putExtra(PREF_PASSWORD, pass);
+
+
+
+                                    mainActivityIntent.putExtra(PREF_USERNAME, encrypter.encrypt(user));
+                                    mainActivityIntent.putExtra(PREF_PASSWORD, encrypter.encrypt(pass));
                                     mainActivityIntent.putExtra(PREF_ID, id);
                                     startActivity(mainActivityIntent);
                                 }

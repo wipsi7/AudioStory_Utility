@@ -14,4 +14,7 @@
     <string name="write_to_tag_activity_nfc">Write to tag</string>
     <string name="artifact_name_activity_nfc">Artifact name</string>
     <string name="insert_artifact_name_activity_nfc">Insert artifact name</string>
+
+    <string name="approach_nfc_tag_activity_nfc_write">Approach an NFC Tag</string>
+    <string name="cancel_activity_nfc_write">Cancel</string>
 </resources>
