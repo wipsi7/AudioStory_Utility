@@ -66,9 +66,9 @@ public class LoginActivity extends AppCompatActivity{
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String user = et_user.getText().toString();
-                final String pass = et_pass.getText().toString();
-                final String id = et_id.getText().toString();
+                final String user = et_user.getText().toString().trim();
+                final String pass = et_pass.getText().toString().trim();
+                final String id = et_id.getText().toString().trim();
 
                 if (isFormValid()) {
 
