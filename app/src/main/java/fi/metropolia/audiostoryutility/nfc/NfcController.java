@@ -1,6 +1,7 @@
 package fi.metropolia.audiostoryutility.nfc;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
@@ -8,11 +9,13 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class NfcController {
@@ -24,6 +27,9 @@ public class NfcController {
     private String[][] techListArray;
 
     private Locale locale;
+    private byte[] langBytes;
+    private Charset utfEncoding;
+
     private NfcAdapter nfcAdapter;
 
     public NfcController(Context context){
@@ -48,6 +54,9 @@ public class NfcController {
 
     private void init() {
         locale = context.getResources().getConfiguration().locale;
+        langBytes = locale.getLanguage().getBytes(Charset.forName("US-ASCII"));
+        utfEncoding = Charset.forName("UTF-8");
+
         nfcAdapter = NfcAdapter.getDefaultAdapter(context.getApplicationContext());
 
         IntentFilter nDef = createNdefIntentFilter();
@@ -81,9 +90,7 @@ public class NfcController {
     }
 
     public NdefRecord createNdefTextRecord(String payload) {
-        byte[] langBytes = locale.getLanguage().getBytes(Charset.forName("US-ASCII"));
 
-        Charset utfEncoding = Charset.forName("UTF-8");
         byte[] textBytes = payload.getBytes(utfEncoding);
         int utfBit = 0;
         char status = (char) (utfBit + langBytes.length);
@@ -140,6 +147,33 @@ public class NfcController {
         }
 
 
+    }
+
+    public NdefMessage[] retrieveNdefMessage(Intent intent){
+        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        NdefMessage[] ndefMessages;
+        if(rawMsgs == null){
+            return null;
+        }
+
+        ndefMessages = new NdefMessage[rawMsgs.length];
+        for(int i = 0; i < rawMsgs.length; i++){
+            ndefMessages[i] = (NdefMessage)rawMsgs[i];
+        }
+        return ndefMessages;
+    }
+
+    public ArrayList<String> readRecords(NdefRecord[] ndefRecords) {
+
+        ArrayList<String> records = new ArrayList<>();
+        byte[] payload;
+
+        for(int i = 0; i < ndefRecords.length; i++){
+            payload = ndefRecords[i].getPayload();
+            records.add(i, new String(payload, langBytes.length + 1, payload.length - langBytes.length - 1, utfEncoding));
+        }
+
+        return records;
     }
 
 }

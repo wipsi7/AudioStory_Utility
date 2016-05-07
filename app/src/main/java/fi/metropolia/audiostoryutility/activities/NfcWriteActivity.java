@@ -7,7 +7,6 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import fi.metropolia.audiostoryutility.R;
@@ -70,14 +69,11 @@ public class NfcWriteActivity extends AppCompatActivity {
 
     private NdefRecord[] createNDefRecordArray() {
         NdefRecord[] ndefRecordsTemp = new NdefRecord[5];
-        ndefRecordsTemp[0] = NdefRecord.createApplicationRecord("fi.metropolia.audiostory");
-        ndefRecordsTemp[1] = nfcController.createNdefTextRecord(user);
-        ndefRecordsTemp[2] = nfcController.createNdefTextRecord(pass);
-        ndefRecordsTemp[3] = nfcController.createNdefTextRecord(collId);
-        ndefRecordsTemp[4] = nfcController.createNdefTextRecord(artifactName);
-
-        Log.d(DEBUG_TAG, "Decrypter user: " + encrypter.decrypt(user));
-        Log.d(DEBUG_TAG, "Decrypted pass: " + encrypter.decrypt(pass));
+        ndefRecordsTemp[0] = nfcController.createNdefTextRecord(user);
+        ndefRecordsTemp[1] = nfcController.createNdefTextRecord(pass);
+        ndefRecordsTemp[2] = nfcController.createNdefTextRecord(collId);
+        ndefRecordsTemp[3] = nfcController.createNdefTextRecord(artifactName);
+        ndefRecordsTemp[4] = NdefRecord.createApplicationRecord("fi.metropolia.audiostory");
 
         return ndefRecordsTemp;
     }
