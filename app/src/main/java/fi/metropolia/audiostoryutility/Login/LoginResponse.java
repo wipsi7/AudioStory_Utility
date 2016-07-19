@@ -7,7 +7,7 @@ public class LoginResponse {
 
     @SerializedName("api_key")
     @Expose
-    private String api_key;
+    private String api_key = null;
 
     public String getApi_key() {
         return api_key;
