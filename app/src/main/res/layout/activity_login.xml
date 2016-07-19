@@ -83,7 +83,8 @@
         android:id="@+id/enter_button"
         android:layout_marginTop="30dp"
         android:layout_below="@+id/collection_id"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:onClick="onLoginButtonTap"/>
 
     <CheckBox
         android:layout_width="wrap_content"
