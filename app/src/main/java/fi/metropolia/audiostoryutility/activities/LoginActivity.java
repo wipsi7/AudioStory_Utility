@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import fi.metropolia.audiostoryutility.Login.LoginCredentials;
 import fi.metropolia.audiostoryutility.Login.LoginRequest;
 import fi.metropolia.audiostoryutility.Login.LoginResponse;
 import fi.metropolia.audiostoryutility.R;
@@ -35,24 +36,22 @@ public class LoginActivity extends AppCompatActivity{
     private static final String PREFS_NAME = "AudioStoryUtility";
     private static final String CHECKED = "checked";
 
-
     private static final int API_KEY_LENGTH = 128;
     public static final String API_KEY = "Key";
 
-    public LoginApi service;
-    public LoginRequest loginRequest;
-    public Call<LoginResponse> originalLoginResponseCall;
-    public Callback<LoginResponse> loginCallback;
+    private LoginApi service;
+    private LoginRequest loginRequest;
+    private Call<LoginResponse> originalLoginResponseCall;
+    private Callback<LoginResponse> loginCallback;
 
     //Views
     private EditText et_user, et_pass, et_id;
     private CheckBox cb_remember_me;
 
     private Intent mainActivityIntent;
+    private LoginCredentials loginCredentials;
+    private boolean waitResponse = false;
 
-    public String user;
-    public String pass;
-    public String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +59,7 @@ public class LoginActivity extends AppCompatActivity{
         setContentView(R.layout.activity_login);
 
         mainActivityIntent = new Intent(this, NfcActivity.class);
+        loginCredentials = new LoginCredentials();
 
         initViews();
         initRetrofit();
@@ -87,10 +87,7 @@ public class LoginActivity extends AppCompatActivity{
         loginCallback = new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-
-
                 LoginResponse loginResponse = response.body();
-                Log.d(DEBUG_TAG, "Response code: " + response.code());
                 Log.d(DEBUG_TAG, "onResponse: " + loginResponse.getApi_key());
 
                 int length = loginResponse.getApi_key().length();
@@ -99,48 +96,58 @@ public class LoginActivity extends AppCompatActivity{
                     mainActivityIntent.putExtra(API_KEY, loginResponse.getApi_key());
                     mainActivityIntent.putExtra(PREF_USERNAME, encrypter.encrypt(loginRequest.getUsername()));
                     mainActivityIntent.putExtra(PREF_PASSWORD, encrypter.encrypt(loginRequest.getPassword()));
-                    mainActivityIntent.putExtra(PREF_ID, id);
+                    mainActivityIntent.putExtra(PREF_ID, loginCredentials.getId());
+                    waitResponse = false;
                     startActivity(mainActivityIntent);
                 }
                 else{
+                    waitResponse = false;
                     Toast.makeText(getBaseContext(), "Wrong username or password", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Log.d(DEBUG_TAG, "onFailure: " + t.getMessage());
+                waitResponse = false;
+                Toast.makeText(getBaseContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
     }
 
-
     public void onLoginButtonTap(View v){
-        user = et_user.getText().toString().trim();
-        pass = et_pass.getText().toString().trim();
-        id = et_id.getText().toString().trim();
+        if(!waitResponse) {
+            waitResponse = true;
+            loginCredentials.setUser(et_user.getText().toString().trim());
+            loginCredentials.setPass(et_pass.getText().toString().trim());
+            loginCredentials.setId(et_id.getText().toString().trim());
 
-        if (isFormValid()) {
+            if (isFormValid()) {
+                processRememberMe();
 
-            if(cb_remember_me.isChecked()){
-                savePreferences(user, pass, id, true);
+                if (isNetworkAvailable()) {
+
+                    loginRequest.setUsername(loginCredentials.getUser());
+                    loginRequest.setPassword(loginCredentials.getPass());
+
+                    Call<LoginResponse> newLoginResponseCall = originalLoginResponseCall.clone();
+                    newLoginResponseCall.enqueue(loginCallback);
+
+                } else {
+                    Toast.makeText(getBaseContext(), "No connection to Internet", Toast.LENGTH_SHORT).show();
+                    waitResponse = false;
+                }
+
             }else {
-                savePreferences(null, null, null, false);
+                waitResponse = false;
             }
+        }
+    }
 
-            if(isNetworkAvailable()) {
-                Log.d(DEBUG_TAG, "Connected to internet");
-
-                loginRequest.setUsername(user);
-                loginRequest.setPassword(pass);
-
-                Call<LoginResponse> newLoginResponseCall = originalLoginResponseCall.clone();
-                newLoginResponseCall.enqueue(loginCallback);
-
-            }else {
-                Toast.makeText(getBaseContext(), "You are not connected to internet", Toast.LENGTH_SHORT).show();
-            }
-
+    private void processRememberMe() {
+        if(cb_remember_me.isChecked()){
+            savePreferences(loginCredentials.getUser(), loginCredentials.getPass(), loginCredentials.getId(), true);
+        }else {
+            savePreferences(null, null, null, false);
         }
     }
 
@@ -153,7 +160,6 @@ public class LoginActivity extends AppCompatActivity{
                 .putBoolean(CHECKED, remember_checkbox)
                 .commit();
     }
-
 
     private void loadPreferences() {
         SharedPreferences pref = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
@@ -169,7 +175,6 @@ public class LoginActivity extends AppCompatActivity{
             cb_remember_me.setChecked(true);
         }
     }
-
 
     private boolean isFormValid(){
         boolean isUserEmpty = et_user.getText().toString().isEmpty();
@@ -194,5 +199,4 @@ public class LoginActivity extends AppCompatActivity{
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
 }
