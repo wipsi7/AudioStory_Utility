@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_sign_in);
 
         mainActivityIntent = new Intent(this, NfcActivity.class);
         loginCredentials = new LoginCredentials();
@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity{
                 .putString(PREF_PASSWORD, pass)
                 .putString(PREF_ID,id)
                 .putBoolean(CHECKED, remember_checkbox)
-                .commit();
+                .apply();
     }
 
     private void loadPreferences() {
