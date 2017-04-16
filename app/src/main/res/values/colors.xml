@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="counterColor">#C62828</color>
+    <color name="material_background">#212121</color>
 </resources>
